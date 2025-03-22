@@ -25,10 +25,11 @@ The dataset contains the following variables:
 
 ## Visualizations
 ### 1. Correlation Heatmap
-A heatmap will visualize the correlation between different features to understand which variables have the strongest impact on performance.
+![correlation](https://github.com/user-attachments/assets/028bacae-9632-4f5f-ad74-05f44182a8b0)
+
 
 ### 2. Distribution Plots
-Histograms or scatterplots will showcase the distribution of study hours, sleep patterns, and past scores, highlighting trends that affect performance.
+
 
 ## Potential Applications
 - Personalized learning recommendations based on study patterns.
