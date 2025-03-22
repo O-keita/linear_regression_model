@@ -2,8 +2,23 @@ import fastapi
 import joblib
 import numpy as np
 from pydantic import BaseModel, Field
+from fastapi.middleware.cors import CORSMiddleware
 
 app = fastapi.FastAPI()
+
+
+origins = [
+    "https://linear-regression-model-mlky.onrender.com",  # Your frontend URL
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 
 # Load the trained model
 model = joblib.load("models/linear_regression.pkl")
