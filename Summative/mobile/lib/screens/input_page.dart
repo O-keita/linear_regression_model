@@ -13,7 +13,6 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
-
   final TextEditingController hoursStudyController = TextEditingController();
   final TextEditingController previousScoreController = TextEditingController();
   final TextEditingController extraController = TextEditingController();
@@ -23,28 +22,35 @@ class _InputPageState extends State<InputPage> {
   String? selectedExtraActivity; // Stores Yes/No for extracurricular
   int extraActivityValue = 0;
 
-  Object? get requestBody => null; // Converts Yes to 1, No to 0
+  // Error messages
+  Map<String, String> errorMessages = {};
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     Future<void> sendPredictionRequest() async {
-
-      double hoursStudied = double.parse(hoursStudyController.text);
-      double previousScores = double.parse(previousScoreController.text);
-      double sleepHours = double.parse(sleepHoursController.text);
-      double sampleQuestions = double.parse(sampleQuestionsController.text);
-      double extracurricularActivities = selectedExtraActivity == 'Yes' ? 1.0 : 0.0;
-
-      // Create the request body
-      Map<String, dynamic> requestBody = {
-        'hours_studied': hoursStudied,
-        'previous_scores': previousScores,
-        'extracurricular_activities': extracurricularActivities,
-        'sleep_hours': sleepHours,
-        'sample_question_papers_practiced': sampleQuestions,
-      };
+      // Clear previous errors
+      setState(() {
+        errorMessages = {};
+        isLoading = true;
+      });
 
       try {
+        double hoursStudied = double.parse(hoursStudyController.text);
+        double previousScores = double.parse(previousScoreController.text);
+        double sleepHours = double.parse(sleepHoursController.text);
+        double sampleQuestions = double.parse(sampleQuestionsController.text);
+        double extracurricularActivities = selectedExtraActivity == 'Yes' ? 1.0 : 0.0;
+
+        // Create the request body
+        Map<String, dynamic> requestBody = {
+          'hours_studied': hoursStudied,
+          'previous_scores': previousScores,
+          'extracurricular_activities': extracurricularActivities,
+          'sleep_hours': sleepHours,
+          'sample_question_papers_practiced': sampleQuestions,
+        };
+
         print('Request body: ${jsonEncode(requestBody)}');
         final response = await http.post(
           Uri.parse('https://linear-regression-model-mlky.onrender.com/predict'),
@@ -64,12 +70,49 @@ class _InputPageState extends State<InputPage> {
             ),
           );
         } else {
-          // Handle server errors
-          print('Server error: ${response.statusCode}');
+          // Handle validation errors
+          Map<String, dynamic> errorResponse = jsonDecode(response.body);
+
+          if (errorResponse.containsKey('detail') && errorResponse['detail'] is List) {
+            List<dynamic> details = errorResponse['detail'];
+
+            Map<String, String> newErrors = {};
+            for (var error in details) {
+              if (error is Map && error.containsKey('loc') && error.containsKey('msg')) {
+                List<dynamic> location = error['loc'];
+                if (location.length >= 2 && location[0] == 'body') {
+                  String fieldName = location[1].toString();
+                  String errorMsg = error['msg'].toString();
+
+                  // Convert API field names to user-friendly names
+                  String displayField = _getDisplayFieldName(fieldName);
+                  newErrors[fieldName] = '$displayField: $errorMsg';
+                }
+              }
+            }
+
+            setState(() {
+              errorMessages = newErrors;
+            });
+
+            // Show error dialog
+            _showErrorDialog(context);
+          } else {
+            // Show general server error
+            _showGeneralErrorDialog(context, 'Server Error: ${response.statusCode}');
+          }
         }
       } catch (e) {
-        // Handle connection errors
-        print('Connection error: $e');
+        // Handle parse errors and connection errors
+        if (e is FormatException) {
+          _showGeneralErrorDialog(context, 'Please enter valid numbers in all fields');
+        } else {
+          _showGeneralErrorDialog(context, 'Connection error: $e');
+        }
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
       }
     }
 
@@ -87,12 +130,12 @@ class _InputPageState extends State<InputPage> {
               Text(
                 "Enter Study Data",
                 style: TextStyle(
-                  color: AppColors.whiteAccent,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w500
+                    color: AppColors.whiteAccent,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w500
                 ),
               ),
-              SizedBox(height:30 ,),
+              SizedBox(height:30,),
               // Hours Studied
               TextField(
                 controller: hoursStudyController,
@@ -102,7 +145,7 @@ class _InputPageState extends State<InputPage> {
                     fontSize: 17
                 ),
                 decoration: InputDecoration(
-                    labelText: "Hours Studied",
+                    labelText: "Hours Studied (1-12)",
                     labelStyle: TextStyle(
                         color: AppColors.lightBlue
                     ),
@@ -111,10 +154,10 @@ class _InputPageState extends State<InputPage> {
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: AppColors.lightBlue)
                     ),
-                    border: InputBorder.none
-
+                    border: InputBorder.none,
+                    errorText: errorMessages.containsKey('hours_studied') ? errorMessages['hours_studied'] : null,
+                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 8)
                 ),
-
               ),
               SizedBox(height: 20,),
               // Previous Scores
@@ -126,7 +169,7 @@ class _InputPageState extends State<InputPage> {
                     fontSize: 17
                 ),
                 decoration: InputDecoration(
-                    labelText: " Previous Scores",
+                    labelText: "Previous Scores (0-100)",
                     labelStyle: TextStyle(
                         color: AppColors.lightBlue
                     ),
@@ -135,10 +178,10 @@ class _InputPageState extends State<InputPage> {
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: AppColors.lightBlue)
                     ),
-                    border: InputBorder.none
-
+                    border: InputBorder.none,
+                    errorText: errorMessages.containsKey('previous_scores') ? errorMessages['previous_scores'] : null,
+                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 8)
                 ),
-
               ),
               SizedBox(height: 20,),
               TextField(
@@ -149,7 +192,7 @@ class _InputPageState extends State<InputPage> {
                     fontSize: 17
                 ),
                 decoration: InputDecoration(
-                    labelText: " Sleep Hours",
+                    labelText: "Sleep Hours (4-10)",
                     labelStyle: TextStyle(
                         color: AppColors.lightBlue
                     ),
@@ -158,12 +201,10 @@ class _InputPageState extends State<InputPage> {
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: AppColors.lightBlue)
                     ),
-                    border: InputBorder.none
-
+                    border: InputBorder.none,
+                    errorText: errorMessages.containsKey('sleep_hours') ? errorMessages['sleep_hours'] : null,
+                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 8)
                 ),
-
-
-
               ),
               SizedBox(height: 20,),
               TextField(
@@ -174,7 +215,7 @@ class _InputPageState extends State<InputPage> {
                     fontSize: 17
                 ),
                 decoration: InputDecoration(
-                    labelText: "Sample Question Papers Practiced",
+                    labelText: "Sample Question Papers Practiced (0-10)",
                     labelStyle: TextStyle(
                         color: AppColors.lightBlue
                     ),
@@ -183,39 +224,36 @@ class _InputPageState extends State<InputPage> {
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: AppColors.lightBlue)
                     ),
-                    border: InputBorder.none
-
+                    border: InputBorder.none,
+                    errorText: errorMessages.containsKey('sample_question_papers_practiced') ? errorMessages['sample_question_papers_practiced'] : null,
+                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 8)
                 ),
-
               ),
               SizedBox(height: 20,),
               //Drop Down for Extra curricular
-
               DropdownButtonFormField<String>(
-
                 style: TextStyle(
-                  color: AppColors.whiteAccent
+                    color: AppColors.whiteAccent
                 ),
                 value: selectedExtraActivity,
                 decoration: InputDecoration(
-                  labelText: "Extracurricular Activities ??",
-                  labelStyle: TextStyle(
-                    color: AppColors.lightBlue,
-
-                  ),
-                  fillColor: AppColors.darkestBlue,
-                  filled: true,
-                  focusedBorder:UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.lightBlue)
-                  )
+                    labelText: "Extracurricular Activities ??",
+                    labelStyle: TextStyle(
+                      color: AppColors.lightBlue,
+                    ),
+                    fillColor: AppColors.darkestBlue,
+                    filled: true,
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.lightBlue)
+                    ),
+                    errorText: errorMessages.containsKey('extracurricular_activities') ? errorMessages['extracurricular_activities'] : null,
+                    errorStyle: TextStyle(color: Colors.redAccent)
                 ),
                 items: ["Yes", "No"].map((String value){
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
                   );
-
-
                 }).toList(),
                 onChanged: (newValue){
                   setState(() {
@@ -223,66 +261,156 @@ class _InputPageState extends State<InputPage> {
                   });
                 },
                 dropdownColor: AppColors.darkestBlue,
-
               ),
-
               SizedBox(height: 25,),
-              
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  
                   ElevatedButton(
                       onPressed: (){
-
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius:  BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(50),
                             side: BorderSide(color: AppColors.lightBlue)
                         ),
                         padding: EdgeInsets.symmetric(vertical: 15, horizontal: 40),
                         backgroundColor: AppColors.darkestBlue,
-
                       ),
                       child: Text(
-                          "back",
+                        "back",
                         style: TextStyle(
-                          fontSize: 17,
-                          color: AppColors.lightBlue
+                            fontSize: 17,
+                            color: AppColors.lightBlue
                         ),
-                      )),
+                      )
+                  ),
                   ElevatedButton(
-                      onPressed: (){
-                        sendPredictionRequest();
-                      },
-
-                      style: ElevatedButton.styleFrom(
-
-                        padding: EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 40,
-                        ),
-                        backgroundColor: AppColors.orangeAccent,
-                      ) ,
-
-                    child: Text("Predict",style: TextStyle(
-                      color: AppColors.whiteAccent,
-                      fontSize: 17
-                    ),),
+                    onPressed: isLoading ? null : sendPredictionRequest,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 15,
+                        horizontal: 40,
+                      ),
+                      backgroundColor: isLoading ? Colors.grey : AppColors.orangeAccent,
+                    ),
+                    child: isLoading
+                        ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.whiteAccent,
+                        )
+                    )
+                        : Text(
+                      "Predict",
+                      style: TextStyle(
+                          color: AppColors.whiteAccent,
+                          fontSize: 17
+                      ),
+                    ),
                   )
-
-                  
                 ],
               )
             ],
-            
-            
           ),
-
         ),
       ),
     );
+  }
+
+  // Helper method to show error dialog
+  void _showErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.darkestBlue,
+          title: Text(
+            'Validation Error',
+            style: TextStyle(color: AppColors.whiteAccent),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: errorMessages.values.map((errorMsg) =>
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Text(
+                      '• $errorMsg',
+
+                      style: TextStyle(color: Colors.redAccent, fontSize: 10),
+                    ),
+                  )
+              ).toList(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: AppColors.lightBlue),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Helper method to show general error dialog
+  void _showGeneralErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.darkestBlue,
+          title: Text(
+            'Error',
+            style: TextStyle(color: AppColors.whiteAccent),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: AppColors.whiteAccent),
+          ),
+          actions: [
+            TextButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: AppColors.lightBlue),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Helper method to get user-friendly field names
+  String _getDisplayFieldName(String apiFieldName) {
+    switch(apiFieldName) {
+      case 'hours_studied':
+        return 'Hours Studied';
+      case 'previous_scores':
+        return 'Previous Scores';
+      case 'extracurricular_activities':
+        return 'Extracurricular Activities';
+      case 'sleep_hours':
+        return 'Sleep Hours';
+      case 'sample_question_papers_practiced':
+        return 'Sample Question Papers';
+      default:
+        return apiFieldName;
+    }
   }
 }

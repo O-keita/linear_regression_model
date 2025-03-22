@@ -149,16 +149,7 @@ class ResultScreen extends StatelessWidget {
                       ),
                       Divider(height: 5, color: AppColors.lightBlue,),
                       SizedBox(height: 15,),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-
-                          Text("Confidence:", style: TextStyle(color: AppColors.lightBlue, fontSize:18 ),),
-                          Text("90%", style: TextStyle(color: AppColors.orangeAccent, fontSize: 17),),
-                        ],
-                      ),
-                      Divider(color: AppColors.lightBlue,),
+                      
                       SizedBox(height: 15,),
 
                       Row(
