@@ -38,7 +38,36 @@ The **heatmap** below illustrates how each feature contributes to or correlates 
 ![correlation](https://github.com/user-attachments/assets/028bacae-9632-4f5f-ad74-05f44182a8b0)
 
 
-### 2. Distribution Plots
+### 2. Boxplot Visualization
+
+# Boxplot to show the distribution of our data
+
+The boxplot below shows the graphical distribution of our student dataset, which helps us not only know the distribution of the dataset but also identify outliers that might hinder our predictions. As you can see, our data does not have any outliers, which would be points below the 25th percentile or above the 95th percentile. In the boxplot, we observe:
+
+- Our highest **Hours Studied** is 9, indicating that the highest amount of time a student spends studying is 9 hours.
+
+- The highest **previous score** is 99, showing that the best score a student has achieved is 99.
+
+- The highest **sleep hours** is 9, which suggests that the maximum amount of sleep a student gets is 9 hours.
+
+- The highest **sample questions practiced** is 10, indicating that the highest number of sample questions practiced by a student is 10.
+
+On the other hand:
+
+- The minimum **study hours** is 1, meaning the least amount of time spent on studying is 1 hour.
+
+- The minimum **previous score** is 40, suggesting that the lowest score recorded by a student is 40.
+
+- The minimum **sleep hours** is 4, meaning the least amount of sleep a student gets is 4 hours.
+
+- The minimum **sample questions practiced** is 0, indicating that there are students who have not practiced any sample questions.
+
+These values help us understand the overall spread and variability in the dataset, and knowing that there are no extreme outliers provides confidence in the integrity of the data.
+![boxploy](https://github.com/user-attachments/assets/851e406d-063d-46be-ba7c-93f510104452)
+
+
+
+
 
 
 ## Potential Applications
