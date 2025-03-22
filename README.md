@@ -34,8 +34,9 @@ The **heatmap** below illustrates how each feature contributes to or correlates 
 - **Extracurricular Activities** has the lowest correlation value of **0.02**. While its direct impact on the performance index is minimal, it still plays a role in a student's overall academic experience and well-being.
 
 
+![download](https://github.com/user-attachments/assets/69e67d65-9200-4fb5-8684-daa31ac49646)
 
-![correlation](https://github.com/user-attachments/assets/028bacae-9632-4f5f-ad74-05f44182a8b0)
+
 
 
 ### 2. Boxplot Visualization
