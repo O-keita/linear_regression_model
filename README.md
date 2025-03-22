@@ -25,6 +25,16 @@ The dataset contains the following variables:
 
 ## Visualizations
 ### 1. Correlation Heatmap
+The **heatmap** below illustrates how each feature contributes to or correlates with the target variable, Performance Index:
+
+- **Previous Scores** has the highest correlation value of **0.92**, indicating that prior academic performance is the strongest predictor of future performance. The positive correlation suggests that higher previous scores generally lead to higher performance indices.
+
+- **Hours Studied** follows with a correlation of **0.37**, showing that increased study hours are associated with improved academic outcomes, though not as strongly as previous scores.
+
+- **Extracurricular Activities** has the lowest correlation value of **0.02**. While its direct impact on the performance index is minimal, it still plays a role in a student's overall academic experience and well-being.
+
+
+
 ![correlation](https://github.com/user-attachments/assets/028bacae-9632-4f5f-ad74-05f44182a8b0)
 
 
