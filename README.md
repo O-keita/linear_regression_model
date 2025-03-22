@@ -9,8 +9,6 @@ The dataset explores the relationship between study habits, sleep patterns, extr
 ### Source
 https://www.kaggle.com/datasets/nikhil7280/student-performance-multiple-linear-regression
 
-## Use Case
-Unlike generic datasets, this dataset is specifically designed for academic performance prediction, helping students personalize their learning plans by understanding how different factors impact their results. It enables educational institutions to enhance personalized learning recommendations and intervention strategies.
 
 ## Dataset Characteristics
 The dataset contains the following variables:
@@ -22,7 +20,7 @@ The dataset contains the following variables:
 - **Performance Index** - The final outcome representing academic success.
 
 ## Data Richness
-- **Volume**: The dataset contains sufficient records to analyze academic performance trends.
+- **Volume**: The dataset contains sufficient records of 10000 entries(Rows) with 6 Columns to analyze academic performance trends.
 - **Variety**: It captures diverse factors, including behavioral and academic influences, ensuring a holistic view of student performance.
 
 ## Visualizations
