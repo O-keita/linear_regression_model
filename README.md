@@ -7,7 +7,7 @@ This project is dedicated to improving education in The Gambia through modern te
 The dataset explores the relationship between study habits, sleep patterns, extracurricular activities, and prior academic achievements with students' performance indices. This information helps in identifying key factors that contribute to success in academics, forming a strong foundation for personalized learning recommendations.
 
 ### Source
-If sourced from Kaggle, the dataset should be referenced accordingly. Otherwise, it is an educational dataset created for research and learning purposes.
+https://www.kaggle.com/datasets/nikhil7280/student-performance-multiple-linear-regression
 
 ## Use Case
 Unlike generic datasets, this dataset is specifically designed for academic performance prediction, helping students personalize their learning plans by understanding how different factors impact their results. It enables educational institutions to enhance personalized learning recommendations and intervention strategies.
