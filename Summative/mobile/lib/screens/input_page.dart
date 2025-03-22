@@ -47,7 +47,7 @@ class _InputPageState extends State<InputPage> {
       try {
         print('Request body: ${jsonEncode(requestBody)}');
         final response = await http.post(
-          Uri.parse('http://192.168.0.194:5000/predict'),
+          Uri.parse('https://linear-regression-model-mlky.onrender.com/predict'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(requestBody),
         );
