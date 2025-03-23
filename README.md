@@ -3,6 +3,10 @@
 ## Mission
 This project is dedicated to improving education in The Gambia through modern technology, leveraging Machine Learning (ML) and Artificial Intelligence (AI) to provide data-driven insights that enhance learning strategies. By analyzing key academic performance factors, this initiative aims to equip students, educators, and policymakers with tools to optimize study habits, improve teaching methods, and drive educational success through intelligent systems and predictive analytics.
 
+EndpointLink: https://linear-regression-model-mlky.onrender.com/predict
+Swagger UI Link: https://linear-regression-model-mlky.onrender.com/docs#/default/predict_predict_post
+Youtube Video Link: https://youtu.be/q6LNTgmegkk
+
 ## Dataset Description
 The dataset explores the relationship between study habits, sleep patterns, extracurricular activities, and prior academic achievements with students' performance indices. This information helps in identifying key factors that contribute to success in academics, forming a strong foundation for personalized learning recommendations.
 
