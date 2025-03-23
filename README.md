@@ -7,7 +7,7 @@ EndpointLink: https://linear-regression-model-mlky.onrender.com/predict
 
 Swagger UI Link: https://linear-regression-model-mlky.onrender.com/docs#/default/predict_predict_post
 
-Youtube Video Link: https://youtu.be/q6LNTgmegkk
+Demo Video Link: https://youtu.be/q6LNTgmegkk
 
 ## Dataset Description
 The dataset explores the relationship between study habits, sleep patterns, extracurricular activities, and prior academic achievements with students' performance indices. This information helps in identifying key factors that contribute to success in academics, forming a strong foundation for personalized learning recommendations.
