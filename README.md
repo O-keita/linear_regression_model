@@ -85,4 +85,49 @@ These values help us understand the overall spread and variability in the datase
 - Data-driven policymaking for educational reforms in The Gambia.
 
 By leveraging this dataset, this project aims to refine educational strategies and improve student outcomes through data-driven insights and technological advancements.
+---
+# Running The App
 
+### cloning the repo
+
+```
+git clone https://github.com/O-keita/linear_regression_model.git
+```
+
+### getting Started
+
+```
+cd Summative
+```
+
+### Run Backend
+
+```
+cd API
+```
+
+```
+pip freeze -r requirements.txt
+```
+
+```
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### Run FrontEnd
+
+``` cd ..
+```
+```
+cd FlutterApp
+```
+```
+flutter pub get
+```
+#### open IDE to run main.dart and select emulator
+```
+flutter run
+```
+
+
+## Thank You
